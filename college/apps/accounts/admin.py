@@ -72,7 +72,28 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ["user", "username", "firstname", "lastname"]
-    list_filter = ["created_at", "updated_at"]
+    list_filter = ["created_at", "updated_at", "birth_date", "is_active"]
     search_fields = ["username", "firstname", "lastname"]
+    readonly_fields = ["created_at", "updated_at"]
     raw_id_fields = ["user"]
     list_per_page = 30
+
+    fieldsets = (
+        [_("Personal Information"),
+            {
+                "fields": ("user", "username", "national_code", "birth_date")
+            }
+        ],
+        [_("Extra Information"),
+            {
+                "classes": ("collapse",),
+                "fields": ("firstname", "lastname", "is_active", "avatar_image")
+            }
+        ],
+        [_("Dates Information"),
+            {
+                "classes": ("collapse",),
+                "fields": ("created_at", "updated_at")
+            }
+        ]
+    )
