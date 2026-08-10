@@ -36,6 +36,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=True,
         verbose_name=_("Active")
     )
+    is_staff = models.BooleanField(
+        default=False,
+        verbose_name=_("Staff Status")
+    )
     is_admin = models.BooleanField(
         default=False,
         verbose_name=_("Admin")
