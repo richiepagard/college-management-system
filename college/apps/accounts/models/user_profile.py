@@ -3,6 +3,15 @@ from django.utils.translation import gettext_lazy as _
 
 from .user import User
 from apps.common.models import BaseModel
+from apps.common.utils import path_with_hash
+
+
+def avatar_path(instance, filename: str) -> str:
+    """
+    Uploads the user profile image file with a hash
+    method to encrypting the file.
+    """
+    return f"userprofile/avatar/{path_with_hash(filename)}"
 
 
 class UserProfile(BaseModel):
@@ -19,6 +28,7 @@ class UserProfile(BaseModel):
         national_code (str): The national code of the user.
         birth_date (date): The birth date of the user.
         address (str): The address of the user.
+        avatar_image (file): The user profile picture.
     """
     user = models.OneToOneField(
         User,
@@ -63,6 +73,11 @@ class UserProfile(BaseModel):
         null=True,
         blank=True,
         verbose_name=_("Address"),
+    )
+    avatar_image = models.ImageField(
+        upload_to=avatar_path,
+        blank=True,
+        verbose_name=_('Avatar Image')
     )
 
     class Meta:
