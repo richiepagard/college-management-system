@@ -2,9 +2,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .user import User
+from apps.common.models import BaseModel
 
 
-class UserProfile(models.Model):
+class UserProfile(BaseModel):
     """
     Represents a user profile associated with a user account.
     User profile contains additional information about the user, these information are optional
@@ -18,8 +19,6 @@ class UserProfile(models.Model):
         national_code (str): The national code of the user.
         birth_date (date): The birth date of the user.
         address (str): The address of the user.
-        created_at (datetime): The timestamp when the profile was created.
-        updated_at (datetime): The timestamp when the profile was last updated.
     """
     user = models.OneToOneField(
         User,
@@ -64,14 +63,6 @@ class UserProfile(models.Model):
         null=True,
         blank=True,
         verbose_name=_("Address"),
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_("Created At"),
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name=_("Updated At"),
     )
 
     class Meta:
