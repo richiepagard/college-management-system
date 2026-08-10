@@ -40,7 +40,7 @@ from .conf import TEMPLATES
 
 ROOT_URLCONF = 'core.urls'
 
-WSGI_APPLICATION = 'college.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
