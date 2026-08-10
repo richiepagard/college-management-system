@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from apps.accounts.models import User
+from apps.accounts.models import User, UserProfile
 from apps.accounts.admin_forms import UserCreationForm, UserChangeForm
 
 
@@ -67,3 +67,12 @@ class UserAdmin(BaseUserAdmin):
             form.base_fields['is_superuser'].disabled = True
 
         return form
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ["user", "username", "firstname", "lastname"]
+    list_filter = ["created_at", "updated_at"]
+    search_fields = ["username", "firstname", "lastname"]
+    raw_id_fields = ["user"]
+    list_per_page = 30
