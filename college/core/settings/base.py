@@ -93,3 +93,9 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Phonenumber field config
+from .conf import PHONENUMBER_DEFAULT_REGION
+
+# Customer user model
+AUTH_USER_MODEL = 'accounts.User'
