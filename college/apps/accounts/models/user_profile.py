@@ -86,3 +86,24 @@ class UserProfile(models.Model):
         national_code = self.national_code or "N/A"
 
         return f"{username} ({national_code})"
+
+    @property
+    def fullname(self) -> str:
+        """
+        Returns the fullname of the user with filter.
+        If the user has both first name and last name, it returns "Firstname Lastname".
+        If the user has only first name, it returns "Firstname".
+        If the user has only last name, it returns "Lastname".
+        If the user has neither first name nor last name, it returns "Unknown".
+        """
+        fname = self.firstname if self.firstname else None
+        lname = self.lastname if self.lastname else None
+
+        if fname and lname:
+            return f"{fname.title()} {lname.title()}"
+        elif fname and not lname:
+            return f"{fname.title()}"
+        elif lname and not fname:
+            return f"{lname.title()}"
+        else:
+            return "Unknown"
