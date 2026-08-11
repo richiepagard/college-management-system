@@ -76,6 +76,7 @@ class UserProfile(BaseModel):
     )
     avatar_image = models.ImageField(
         upload_to=avatar_path,
+        null=True,
         blank=True,
         verbose_name=_('Avatar Image')
     )
