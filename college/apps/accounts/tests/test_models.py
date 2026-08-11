@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.db.utils import IntegrityError
 from django.db import transaction
 
-from apps.accounts.models import User
+from apps.accounts.models import User, UserProfile
 
 
 class UserTestCase(TestCase):
@@ -203,3 +203,60 @@ class UserTestCase(TestCase):
         the expected format combining phone number and email.
         """
         self.assertEqual(str(self.brad), "+14185438090 - bradfortest@yahoo.com")
+
+
+class UserProfileTestCase(TestCase):
+    def setUp(self):
+        """
+        Creates instances from User to test in various scenarios.
+        The profile of the created user is going to test.
+        """
+        self.richie = User.objects.create_user(
+            phone_number="+1-404-724-1937",
+            email="richiepagard@gmail.com"
+        )
+        self.profile = self.richie.profile
+
+        User.objects.create_user(
+            phone_number="+1-343-528-0149",
+            email="djangounchained@cool.net"
+        )
+
+    def test_getting_user_profile(self):
+        """Tests the existence of user profile by getting created user profile in setUp."""
+        user = UserProfile.objects.get(user__phone_number="+13435280149")
+
+        self.assertTrue(self.profile.is_active)
+        self.assertTrue(user.is_active)
+
+    def test_profile_empty_fields(self):
+        """
+        Tests that the created user profile has empty fields expect 'user',
+        when a profile for a user created (in signals) it leaves all the fields
+        empty and only create it for the created user.
+        So, the test should see whether the recent created profile has those
+        fields as Null or not.
+
+        Using '_meta' to gets the fields, and combine with 'getattr' to see what its value is.
+        """
+        non_empty_fields = [
+            "accounts.UserProfile.id",
+            "accounts.UserProfile.user",
+            "accounts.UserProfile.created_at",
+            "accounts.UserProfile.updated_at",
+            "accounts.UserProfile.is_active",
+        ]
+
+        for field in self.profile._meta.get_fields():
+
+            if str(field) in non_empty_fields:
+                continue
+
+            # Checks the 'avatar_image' empty value
+            # File fields expose an empty 'FileField' object rather than 'None',
+            # and the 'bool' of 'image / file' field is False if it's empty
+            if str(field) == "accounts.UserProfile.avatar_image":
+                self.assertFalse(self.profile.avatar_image)
+                continue
+
+            self.assertIsNone(getattr(self.profile, field.name))
