@@ -36,6 +36,11 @@ class UserManager(BaseUserManager):
             # where different variations of an email might bypass security checks.
             email=self.normalize_email(email),
         )
+
+        if user.email:
+            # Normalize email to lowercase for consistency and security.
+            user.email = user.email.lower()
+        
         user.set_password(password)
         user.save(using=self._db)
 
@@ -57,6 +62,9 @@ class UserManager(BaseUserManager):
             email=email,
             password=password
         )
+
+        # Set the superuser attributes to True, granting them full access and control over the system
+        user.is_staff = True
         user.is_admin = True
         user.is_superuser = True
         user.save(using=self._db)
