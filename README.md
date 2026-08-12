@@ -81,7 +81,7 @@ The editable Draw.io source file is available here:
 
 Current stage:
 - [x] Database design (MVP)
-- [ ] Django project initialization
+- [x] Django project initialization
 - [ ] Models implementation
 - [ ] REST API
 - [ ] Authentication
