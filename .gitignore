@@ -216,3 +216,19 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Ignore eveything in any migrations folder.
+**/migrations/*
+# Do not ignore the folder itself or the __init__ file
+!**/migrations/
+!**/migrations/__init__.py
+
+# Ignore swap files
+*.swp
+
+# Unnecessary static files
+staticfiles/
+
+# Media files
+media/
+aws/
