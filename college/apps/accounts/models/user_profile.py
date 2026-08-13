@@ -114,3 +114,11 @@ class UserProfile(BaseModel):
             return f"{lname.title()}"
         else:
             return "Unknown"
+
+    def save(self, *args, **kwargs):
+
+        if self.username:
+            self.username = self.username.strip()
+            self.username = "-".join(self.username.split(" ")).lower()
+
+        super().save(*args, **kwargs)
