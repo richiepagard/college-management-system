@@ -90,6 +90,24 @@ Current stage:
 
 ---
 
+## Contributing
+
+Contributions are welcome!
+
+If you have an idea, find a bug, or want to improve the project, feel free to open an issue or submit a pull request.
+
+Before contributing:
+
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Make your changes and add tests when appropriate.
+4. Make sure the project works correctly.
+5. Open a pull request with a clear description of your changes.
+
+> For larger changes, opening an issue first is recommended so the idea can be discussed before implementation.
+
+---
+
 ## Future Improvements
 
 Possible future features:
