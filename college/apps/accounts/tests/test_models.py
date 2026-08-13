@@ -260,3 +260,138 @@ class UserProfileTestCase(TestCase):
                 continue
 
             self.assertIsNone(getattr(self.profile, field.name))
+
+    def test_user_profile_one_to_one_relationship(self):
+        """
+        Tests that a user can only have one profile.
+        """
+
+        with self.assertRaises(IntegrityError):
+
+            # Nested transaction to avoid TransactionManagementError
+            with transaction.atomic():
+                UserProfile.objects.create(user=self.richie)
+
+    def test_user_cascade_deletion(self):
+        """
+        Test CASCADE on_delete for user field.
+        Creates a temp user and then delete it, checks the DoesNotExist
+        exception from the UserProfile after try to get the deleted user's profile.
+        """
+
+        user = User.objects.create_user(
+            phone_number="9096133866",
+            email="usercascade@gmail.com"
+        )
+
+        # Delete the created user
+        user.delete()
+
+        with self.assertRaises(UserProfile.DoesNotExist):
+            UserProfile.objects.get(user__phone_number="+19096133866")
+
+    def test_username_uniqueness(self):
+        """
+        Tests the username uniqueness.
+        Set a username for 'self.profile' which created and set in setUp,
+        then create another user and set the same username for it, too.
+        In the end, checks if raised 'IntegerityError' exception.
+        """
+        self.profile.username = "richiepagard"
+        self.profile.save()
+
+        user = User.objects.create_user(
+            phone_number="9096133866",
+            email="usernotunique@gmail.com"
+        )
+        userprofile = user.profile
+
+        with self.assertRaises(IntegrityError):
+            userprofile.username = "richiepagard"
+            userprofile.save()
+
+    def test_national_code_uniqueness(self):
+        """
+        Tests the national code uniqueness.
+        Set a national code for 'self.profile' which created and set in setUp,
+        then create another user and set the same national code for its profile, too.
+        In the end, checks if raised 'IntegerityError' exception.
+        """
+        self.profile.national_code = "91367"
+        self.profile.save()
+
+        user = User.objects.create_user(
+            phone_number="9096133866",
+            email="usernotunique@gmail.com"
+        )
+        userprofile = user.profile
+
+        with self.assertRaises(IntegrityError):
+            userprofile.national_code = "91367"
+            userprofile.save()
+
+    def test_profile_str_representation(self):
+        """
+        Tests the string representation of the user profile, ensuring that it returns
+        the expected format combining username(or user phone number if username None)
+        and national_code or (N/A) if it's None.
+        Format: <username> (<national_code>)
+
+        Saves objects in various formats and test the object str().
+        """
+        self.assertEqual(str(self.profile), "+14047241937 (N/A)")
+
+        self.profile.username = "RichiePagard"
+        self.profile.save()
+
+        self.assertEqual(str(self.profile), "richiepagard (N/A)")
+
+        user = User.objects.create_user(
+            phone_number="9096133866",
+            email="newuser@gmail.com"
+        )
+        userprofile = user.profile
+        userprofile.username = " New User "
+        userprofile.national_code = "14738"
+        userprofile.save()
+
+        self.assertEqual(str(userprofile), "new-user (14738)")
+
+
+    def test_profile_fullname(self):
+        """
+        Tests the fullname property for all possible combinations
+        of first and last name, including both names, first name only,
+        last name only, and neither name.
+        """
+
+        self.profile.firstname = "Richie"
+        self.profile.lastname = "Pagard"
+        self.profile.save()
+        self.assertEqual(self.profile.fullname, "Richie Pagard")
+
+        dennis = User.objects.create_user(
+            phone_number="9096133866",
+            email="dennisritchie@gmail.com"
+        )
+        userprofile = dennis.profile
+        userprofile.firstname = "Dennis"
+        userprofile.save()
+        self.assertEqual(userprofile.fullname, "Dennis")
+
+        stallman = User.objects.create_user(
+            phone_number="9096133867",
+            email="richardstallman@gmail.com"
+        )
+        userprofile = stallman.profile
+        userprofile.lastname = "Stallman"
+        userprofile.save()
+        self.assertEqual(userprofile.fullname, "Stallman")
+
+        newuser = User.objects.create_user(
+            phone_number="9096133868",
+            email="newuser@gmail.com"
+        )
+        userprofile = newuser.profile
+        userprofile.save()
+        self.assertEqual(userprofile.fullname, "Unknown")
