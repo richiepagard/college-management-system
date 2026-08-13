@@ -102,3 +102,6 @@ from .conf import PHONENUMBER_DEFAULT_REGION
 
 # Customer user model
 AUTH_USER_MODEL = 'accounts.User'
+
+# Logging config
+from .conf import LOGGING
