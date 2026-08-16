@@ -232,3 +232,6 @@ staticfiles/
 # Media files
 media/
 aws/
+
+# DrawIO BKP
+*.bkp
