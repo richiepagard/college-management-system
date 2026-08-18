@@ -12,6 +12,7 @@ EXTERNAL_APPS = [
 LOCAL_APPS = [
     'apps.accounts.apps.AccountsConfig',
     'apps.common.apps.CommonConfig',
+    'apps.students.apps.StudentsConfig',
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + EXTERNAL_APPS + LOCAL_APPS
