@@ -37,7 +37,9 @@ class Student(BaseModel):
         verbose_name_plural = _("Students")
 
     def __str__(self) -> str:
-        return f"{self.user.phone_number} - {self.student_code}"
+        user = self.user.profile.username or self.user.phone_number
+
+        return f"{user} ({self.student_code})"
 
     def save(self, *args, **kwargs) -> None:
         """
