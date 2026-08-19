@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 from apps.common.models import BaseModel
 from apps.common.utils import unique_code_generator
+from .managers import ActiveStudentsManager
 
 User = get_user_model()
 
@@ -31,6 +32,9 @@ class Student(BaseModel):
         blank=True,
         verbose_name=_("Student Code")
     )
+
+    objects = models.Manager()
+    actives = ActiveStudentsManager()
 
     class Meta:
         verbose_name = _("Student")
